@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fetch City Coordinates</title>
+
+<style>
+body {
+    background-color: #eaf4f4;
+    font-family: Arial;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #006666;
+    margin-top: 25px;
+}
+
+input {
+    padding: 12px;
+    width: 220px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: teal;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005959;
+}
+
+#result {
+    display: none;
+    background-color: white;
+    width: 300px;
+    margin: 25px auto;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px gray;
+}
+
+h3 {
+    color: teal;
+}
+</style>
+
+</head>
+
+<body>
+<center>
+
+<h1>Weather Information</h1>
+
+<input type="text" id="in" placeholder="Enter city name">
+<button onclick="getdts()">Search</button>
+
+<div id="result"></div>
+
+<script>
+function getdts() {
+
+    var city = document.getElementById("in").value;
+
+    fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(city) + "&count=5&language=en&format=json")
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        console.log(data);
+
+        if (data.results && data.results.length > 0) {
+
+            let location = data.results[0];
+
+            console.log("City:", location.name);
+            console.log("Latitude:", location.latitude);
+            console.log("Longitude:", location.longitude);
+            console.log("Country:", location.country);
+            console.log("Timezone:", location.timezone);
+
+            document.getElementById("result").style.display = "block";
+
+            document.getElementById("result").innerHTML =
+                "<h3>" + location.name + "</h3>" +
+                "<p>Latitude: " + location.latitude + "</p>" +
+                "<p>Longitude: " + location.longitude + "</p>" +
+                "<p>Country: " + location.country + "</p>";
+
+        } else {
+
+            console.log("City not found");
+
+            document.getElementById("result").style.display = "block";
+
+            document.getElementById("result").innerHTML =
+                "City not found";
+        }
+
+    })
+
+    .catch(error => console.log("Error:", error));
+
+}
+</script>
+
+</center>
+</body>
+</html>
